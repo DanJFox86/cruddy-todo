@@ -45,13 +45,9 @@ exports.getNextUniqueId = (callback) => {
       console.log(err);
     } else {
       // do something with data
-      writeCounter(number+1, callback);
+      writeCounter(number + 1, callback);
     }
   });
-    // pass in write counter
-  // increment counter
-  // counter = counter + 1;
-  // return zeroPaddedNumber(counter);
 };
 
 
