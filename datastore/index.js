@@ -2,6 +2,9 @@ const fs = require('fs');
 const path = require('path');
 const _ = require('underscore');
 const counter = require('./counter');
+const Promise = require('bluebird');
+const readFileSync = Promise.promisify(fs.readFile);
+
 
 var items = {};
 
@@ -30,14 +33,25 @@ exports.create = (text, callback) => {
 
 
 exports.readAll = (callback) => {
-  fs.readdir(exports.dataDir, (err, data) => {
-    data = _.map(data, (fileName) => {
-      var id = fileName.substring(0, fileName.indexOf("."));
-      return { id , text: id };
+  fs.readdir(exports.dataDir, (err, files) => {
+    if (err) {
+      return callback(err);
+    }
+    var data = _.map(files, (file) => {
+      var id = path.basename(file, '.txt');
+      var filePath = path.join(exports.dataDir, file);
+      return readFileSync(filePath).then((fileData) => {
+        return {  
+          id: id, 
+          text: fileData.toString()
+        };
+      });
     });
-    callback(null, data);
+    Promise.all(data)
+      .then((items) => {
+        callback(null, items);
+      });
   });
-
 };
 
 // exports.readAll = (callback) => {
@@ -112,14 +126,14 @@ exports.delete = (id, callback) => {
     }
   });
 };
-  // var item = items[id];
-  // delete items[id];
-  // if (!item) {
-  //   // report an error if item not found
-  //   callback(new Error(`No item with id: ${id}`));
-  // } else {
-  //   callback();
-  // }
+// var item = items[id];
+// delete items[id];
+// if (!item) {
+//   // report an error if item not found
+//   callback(new Error(`No item with id: ${id}`));
+// } else {
+//   callback();
+// }
 // Config+Initialization code -- DO NOT MODIFY /////////////////////////////////
 
 exports.dataDir = path.join(__dirname, 'data');

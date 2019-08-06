@@ -21,7 +21,7 @@ const cleanTestDatastore = () => {
   );
 };
 
-describe('getNextUniqueId', () => {
+xdescribe('getNextUniqueId', () => {
   before(initializeTestFiles);
   beforeEach(initializeTestCounter);
   beforeEach(cleanTestDatastore);
@@ -66,7 +66,7 @@ describe('todos', () => {
   beforeEach(initializeTestCounter);
   beforeEach(cleanTestDatastore);
 
-  describe('create', () => {
+  xdescribe('create', () => {
     it('should create a new file for each todo', (done) => {
       todos.create('todo1', (err, data) => {
         const todoCount = fs.readdirSync(todos.dataDir).length;
@@ -117,9 +117,9 @@ describe('todos', () => {
 
     // Refactor this test when completing `readAll`
     it('should return an array with all saved todos', (done) => {
-      const todo1text = 'todo 1';
-      const todo2text = 'todo 2';
-      const expectedTodoList = [{ id: '00001', text: '00001' }, { id: '00002', text: '00002' }];
+      const todo1text = 'hey i am the first todo';
+      const todo2text = 'yo what up i am number 2 word';
+      const expectedTodoList = [{ id: '00001', text: 'hey i am the first todo' }, { id: '00002', text: 'yo what up i am number 2 word' }];
       todos.create(todo1text, (err, todo) => {
         todos.create(todo2text, (err, todo) => {
           todos.readAll((err, todoList) => {
